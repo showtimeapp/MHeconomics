@@ -411,7 +411,8 @@ def generate_comparison_table(query: str, results: List[Dict]) -> pd.DataFrame:
     messages = [
         {"role": "system", "content": "You are a data extraction assistant."},
         {"role": "user", "content": f"""Extract the relevant metric for "{query}" from each year's data.
-        Return as a simple table with columns: Year, Value, Notes
+Return as a simple table with columns: Year, Value, Notes
+
 Data:
 {context}
 
@@ -500,14 +501,14 @@ def main():
     # Show stats
     col1, col2, col3 = st.columns(3)
     with col1:
-        doc_count = db.documents.count_documents({}) if db else 0
+        doc_count = db.documents.count_documents({}) if db is not None else 0
         st.metric("Documents", doc_count)
     with col2:
-        chunk_count = db.chunks.count_documents({}) if db else 0
+        chunk_count = db.chunks.count_documents({}) if db is not None else 0
         st.metric("Total Pages", chunk_count)
     with col3:
         # Get unique years
-        years = db.documents.distinct('year') if db else []
+        years = db.documents.distinct('year') if db is not None else []
         st.metric("Years Covered", len(years))
     
     # Search interface
